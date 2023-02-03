@@ -10,6 +10,8 @@ from tabulate import tabulate
 import pandas as pd
 import time
 import sys, getopt
+import psycopg2
+from psycopg2 import sql
 import os
 #import mplfinance as mpf
 
@@ -62,6 +64,30 @@ def print_time():
     current_time = time.strftime("%H:%M:%S", t)
     print(current_time)
 
+def open_database():
+    conn = psycopg2.connect(dbname='binance', user='postgres',
+                                 password='Saharnica1', host='5.53.125.79')
+    conn.autocommit = True
+    cursor = conn.cursor()
+
+    return cursor
+
+
+def add_order(cursor,ticker,time,bid,ask):
+
+    values = [
+        (ticker, time, bid, ask)
+    ]
+    insert = sql.SQL('INSERT INTO orders (pair_name, time, bid, ask) VALUES {}').format(
+        sql.SQL(',').join(map(sql.Literal, values))
+    )
+
+    try:
+        cursor.execute(insert)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(f"================ {error} ==================")
+
+
 def read_orders(name):
 
     client = Client(apikey, secretkey)
@@ -75,7 +101,10 @@ def read_orders(name):
             ask = orders['asks'][0][0]
             print(f"{name} bid {orders['bids'][0][0]} asks {orders['asks'][0][0]} time {orders['lastUpdateId']}", end ="\r")
 
+
 def monitor_loop(Subcurrency, Currency1, Currency2):
+
+    cursor = open_database()
 
     client = Client(apikey, secretkey)
     bid = ""
@@ -90,8 +119,18 @@ def monitor_loop(Subcurrency, Currency1, Currency2):
         # в бесконечном цикле печатаем предложения и спрос
 
         orders[Shoulder1] = client.get_order_book(symbol=Shoulder1)
+        # добавляем в SQL
+        add_order(cursor,Shoulder1,int(orders[Shoulder1]['lastUpdateId']),
+                  float(orders[Shoulder1]['bids'][0][0]),
+                  float(orders[Shoulder1]['asks'][0][0]))
         orders[Shoulder2] = client.get_order_book(symbol=Shoulder2)
+        add_order(cursor, Shoulder2, int(orders[Shoulder2]['lastUpdateId']),
+                  float(orders[Shoulder2]['bids'][0][0]),
+                  float(orders[Shoulder2]['asks'][0][0]))
         orders[Direct] = client.get_order_book(symbol=Direct)
+        add_order(cursor, Direct, int(orders[Direct]['lastUpdateId']),
+                  float(orders[Direct]['bids'][0][0]),
+                  float(orders[Direct]['asks'][0][0]))
 
         #if ((bid != orders['bids'][0][0]) or (ask != orders['asks'][0][0])):
         #    bid = orders['bids'][0][0]
