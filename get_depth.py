@@ -11,7 +11,7 @@ import pandas as pd
 import time
 import sys, getopt
 import os
-import mplfinance as mpf
+#import mplfinance as mpf
 
 FOLDER = ".\\data\\"
 
@@ -139,29 +139,31 @@ def monitor_loop(Subcurrency, Currency1, Currency2):
 #            mav=(10, 20, 30))
 
 def main(argv):
-   inputfile = ''
-   outputfile = ''
-   try:
-      opts, args = getopt.getopt(argv,"hs:1:2:",["subcurrency=","currency1=","currency2="])
-   except getopt.GetoptError:
-      print ('test.py -i <inputfile> -o <outputfile>')
-      sys.exit(2)
-   for opt, arg in opts:
-      if opt == '-h':
-         print ('test.py -i <inputfile> -o <outputfile>')
-         sys.exit()
-      elif opt in ("-s", "--subcurrency"):
-         inputfile = arg
-      elif opt in ("-1", "--currency1"):
-         outputfile = arg
-      elif opt in ("-2", "--currency2"):
-         outputfile = arg
-   print ('Input file is ', inputfile)
-   print ('Output file is ', outputfile)
+    global SUBCURRENCY
+    global CURRENCY1
+    global CURRENCY2
+    try:
+        opts, args = getopt.getopt(argv,"hs:1:2:",["subcurrency=","currency1=","currency2="])
+    except getopt.GetoptError:
+        print ('test.py -i <inputfile> -o <outputfile>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print ('test.py -i <inputfile> -o <outputfile>')
+            sys.exit()
+        elif opt in ("-s", "--subcurrency"):
+            SUBCURRENCY = arg
+        elif opt in ("-1", "--currency1"):
+            CURRENCY1 = arg
+        elif opt in ("-2", "--currency2"):
+            CURRENCY2 = arg
+    print('Subcurrency ', SUBCURRENCY)
+    print ('Currency 1 ', CURRENCY1)
+    print ('Currency 2 ', CURRENCY2)
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     main(sys.argv[1:])
- #   monitor_loop(SUBCURRENCY,CURRENCY1,CURRENCY2)
+    monitor_loop(SUBCURRENCY,CURRENCY1,CURRENCY2)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
