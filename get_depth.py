@@ -12,6 +12,10 @@ import time
 import sys, getopt
 import psycopg2
 from psycopg2 import sql
+import logging
+
+
+
 import os
 #import mplfinance as mpf
 
@@ -103,7 +107,7 @@ def read_orders(name):
 
 
 def monitor_loop(Subcurrency, Currency1, Currency2):
-
+    logging.warning('Started loop')
     cursor = open_database()
 
     client = Client(apikey, secretkey)
@@ -153,10 +157,17 @@ def monitor_loop(Subcurrency, Currency1, Currency2):
         if (IndirectCost>1):
             if (not(Start)):
                 print_time()
+                logging.warning(f"Found profit : {IndirectCost}")
                 Start = True
+            logging.warning(f" {Shoulder1} bid {orders[Shoulder1]['bids'][0][0]} asks {orders[Shoulder1]['asks'][0][0]}"
+              f" {Shoulder2} bid {orders[Shoulder2]['bids'][0][0]} asks {orders[Shoulder2]['asks'][0][0]}"
+              f" {Direct} bid {orders[Direct]['bids'][0][0]} asks {orders[Direct]['asks'][0][0]}"
+              f"")
+            logging.warning(f"Profit {IndirectCost} ")
         else:
             if (Start):
                 print_time()
+                logging.warning(f"Found lost : {IndirectCost}")
                 break
 
 
@@ -203,6 +214,7 @@ def main(argv):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     main(sys.argv[1:])
+    logging.basicConfig(filename=f'{SUBCURRENCY,CURRENCY1,CURRENCY2}.log', filemode='w', format='%(asctime)s %(name)s - %(levelname)s - %(message)s')
     monitor_loop(SUBCURRENCY,CURRENCY1,CURRENCY2)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
