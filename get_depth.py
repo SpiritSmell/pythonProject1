@@ -108,7 +108,7 @@ def read_orders(name):
 
 def monitor_loop(Subcurrency, Currency1, Currency2):
     logging.warning('Started loop')
-    cursor = open_database()
+    # cursor = open_database()
 
     client = Client(apikey, secretkey)
     bid = ""
@@ -124,17 +124,17 @@ def monitor_loop(Subcurrency, Currency1, Currency2):
 
         orders[Shoulder1] = client.get_order_book(symbol=Shoulder1)
         # добавляем в SQL
-        add_order(cursor,Shoulder1,int(orders[Shoulder1]['lastUpdateId']),
-                  float(orders[Shoulder1]['bids'][0][0]),
-                  float(orders[Shoulder1]['asks'][0][0]))
+        #add_order(cursor,Shoulder1,int(orders[Shoulder1]['lastUpdateId']),
+        #          float(orders[Shoulder1]['bids'][0][0]),
+        #          float(orders[Shoulder1]['asks'][0][0]))
         orders[Shoulder2] = client.get_order_book(symbol=Shoulder2)
-        add_order(cursor, Shoulder2, int(orders[Shoulder2]['lastUpdateId']),
-                  float(orders[Shoulder2]['bids'][0][0]),
-                  float(orders[Shoulder2]['asks'][0][0]))
+        #add_order(cursor, Shoulder2, int(orders[Shoulder2]['lastUpdateId']),
+        #          float(orders[Shoulder2]['bids'][0][0]),
+        #          float(orders[Shoulder2]['asks'][0][0]))
         orders[Direct] = client.get_order_book(symbol=Direct)
-        add_order(cursor, Direct, int(orders[Direct]['lastUpdateId']),
-                  float(orders[Direct]['bids'][0][0]),
-                  float(orders[Direct]['asks'][0][0]))
+        #add_order(cursor, Direct, int(orders[Direct]['lastUpdateId']),
+        #          float(orders[Direct]['bids'][0][0]),
+        #          float(orders[Direct]['asks'][0][0]))
 
         #if ((bid != orders['bids'][0][0]) or (ask != orders['asks'][0][0])):
         #    bid = orders['bids'][0][0]
