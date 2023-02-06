@@ -12,7 +12,7 @@ POSTGRES_USER = "postgres"
 POSTGRES_PASSWORD = "Saharnica1"
 POSTGRES_DATABASE = "binance"
 
-FOLDER = ".\\data\\"
+FOLDER = ".data"
 
 CURRENCIES = ("AUD","BIDR","BNB","BRL","BTC","BUSD","DAI","DOT","ETH","EUR","GBP","IDRT","NGN","RUB",
               "TRY","TRX","UAH","USDT","XRP","ZAR")
