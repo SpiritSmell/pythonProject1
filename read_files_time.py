@@ -47,44 +47,6 @@ def add_time_type_currency_pair(df,Time,Type,Subcurrency, Currency,Value):
 
     return df
 
-def read_files(directory):
-    df = pd.DataFrame(columns=COLUMNS)
-    # iterate over files in
-    # that directory
-    # Check whether the specified path exists or not
-    isExist = os.path.exists(directory)
-    if not isExist:
-        # Create a new directory because it does not exist
-        os.makedirs(directory)
-        print("The new directory is created!")
-
-    for filename in os.listdir(directory):
-        f = os.path.join(directory, filename)
-        # checking if it is a file
-        if os.path.isfile(f):
-            symbol = os.path.splitext(filename)[0]
-            print(symbol)
-            # определяем основную валюту
-            for currency in CURRENCIES:
-                if (re.search(f".*{currency}$",symbol)):
-                    # определяем доп. валюту
-                    subcurrency = re.sub(f"{currency}$","", symbol)
-                    print(f"{currency} : {subcurrency}")
-                    # читаем данные из файла
-                    file_df = read_csv(f"{directory}{symbol}.csv")
-                    # берем первый элемент
-
-                    value = file_df.loc[LAST_RECORD:LAST_RECORD+1,"Open"]
-                    if (value.empty):
-                        break
-                    value = value.iat[0]
-                    print(value)
-
-                    df = add_currency_pair(df,subcurrency,currency,value)
-                    break
-    print(tabulate(df))
-    df.to_excel(f"result_{LAST_RECORD+2}.xlsx")
-
 
 def read_files_time(directory):
 

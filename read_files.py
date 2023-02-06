@@ -82,8 +82,6 @@ def read_files(directory):
                     print(value)
                     Time = file_df.loc[LAST_RECORD:LAST_RECORD + 1, "Open Time"]
 
-
-
                     df = add_currency_pair(df,subcurrency,currency,value)
                     break
     print(tabulate(df))
