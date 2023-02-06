@@ -11,7 +11,7 @@ import pandas as pd
 import os
 import mplfinance as mpf
 
-FOLDER = ".\\data\\"
+FOLDER = "./data/"
 
 
 def print_hi(name):
@@ -62,14 +62,14 @@ def read_symbols(name):
 
     for row in ticker_df.iterrows():
         symbol = row[1]['symbol']
-        path = f".\\data\\{symbol}.csv"
+        path = f"{FOLDER}{symbol}.csv"
         print(symbol)
 
         if (os.path.isfile(path)):
             print("File exists "+path)
             continue
 
-        historical = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1MINUTE, '29 Jan 2023')
+        historical = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1MINUTE, '05 Feb 2023')
 
         if not historical:
             print("No data for symbol "+symbol)
@@ -89,7 +89,7 @@ def read_symbols(name):
                            'TB Quote Volume']
         hist_df[numeric_columns] = hist_df[numeric_columns].apply(pd.to_numeric, axis=1)
 
-        hist_df.to_csv(f".\\data\\{symbol}.csv")
+        hist_df.to_csv(f"{FOLDER}{symbol}.csv")
 
 #   hist_df['Open Time'] = pd.to_datetime(hist_df['Open Time'] / 1000, unit='s')
 #   hist_df['Close Time'] = pd.to_datetime(hist_df['Close Time'] / 1000, unit='s')

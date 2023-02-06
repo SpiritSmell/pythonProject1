@@ -4,7 +4,7 @@ import pandas as pd
 from tabulate import tabulate
 
 # assign directory
-directory = '.\\data_01.29_2\\'
+directory = '.\\data_02.06\\'
 
 CURRENCIES = ("AUD","BIDR","BNB","BRL","BTC","BUSD","DAI","DOT","ETH","EUR","GBP","IDRT","NGN","RUB",
               "TRY","TRX","UAH","USDT","XRP","ZAR")
@@ -14,7 +14,6 @@ COLUMNS = ("Subcurrency","AUD","BIDR","BNB","BRL","BTC","BUSD","DAI","DOT","ETH"
 
 COLUMNS_TIME = ("Time","Type","Subcurrency","Currency","Value")
 
-TIME = "1672531260000"
 
 LAST_RECORD = 2257
 
