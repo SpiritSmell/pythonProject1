@@ -66,7 +66,7 @@ def print_hi(name):
 def print_time():
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
-    print(current_time)
+    print(current_time,end="")
 
 def open_database():
     conn = psycopg2.connect(dbname='binance', user='postgres',
@@ -141,18 +141,22 @@ def monitor_loop(Subcurrency, Currency1, Currency2):
         #    ask = orders['asks'][0][0]
         #    print(f"{name} bid {orders['bids'][0][0]} asks {orders['asks'][0][0]} time {orders['lastUpdateId']}", end ="\r")
         #print(f"{Shoulder1} bid {orders[Shoulder1]['bids'][0][0]}")
+        print_time()
         print(f" {Shoulder1} bid {orders[Shoulder1]['bids'][0][0]} asks {orders[Shoulder1]['asks'][0][0]}"
               f" {Shoulder2} bid {orders[Shoulder2]['bids'][0][0]} asks {orders[Shoulder2]['asks'][0][0]}"
               f" {Direct} bid {orders[Direct]['bids'][0][0]} asks {orders[Direct]['asks'][0][0]}"
               f"")
-        IndirectCost = 1/float((orders[Shoulder2]['asks'][0][0])) # покупаем BEL на 1 BUSD
-        print(f"Покупаем BEL на 1 BUSD {IndirectCost} ",end="")
-        IndirectCost = IndirectCost * float((orders[Shoulder1]['bids'][0][0]))
-        print(f"Продаем BEL за ETH {IndirectCost} ",end="")
-        IndirectCost = IndirectCost * float((orders[Direct]['bids'][0][0]))
-        print(f"Продаем ETH за BUSD {IndirectCost} ",end="")
-        IndirectCost = IndirectCost / 1.003003
-        print(f"- комиссия  {IndirectCost} ")
+        IndirectCost = 1/float((orders[Shoulder1]['asks'][0][0])) # покупаем BEL на 1 BUSD
+        print(f"Покупаем {Subcurrency} на 1 {Currency1} {IndirectCost} ",end="")
+        IndirectCost = IndirectCost * float((orders[Shoulder2]['bids'][0][0]))
+        print(f"Продаем {Subcurrency} за {Currency2} {IndirectCost} ",end="")
+        IndirectCost = IndirectCost / float((orders[Direct]['bids'][0][0]))
+        print(f"Продаем {Currency2} за {Currency1} {IndirectCost} ",end="")
+        IndirectCost = (IndirectCost / 1.003003 )
+        print(f"- комиссия  {IndirectCost} ",end="")
+        IndirectCost = (IndirectCost -1)
+        print(f"- profit  {IndirectCost} ")
+
 
         if (IndirectCost>1):
             if (not(Start)):
@@ -170,7 +174,7 @@ def monitor_loop(Subcurrency, Currency1, Currency2):
                 logging.warning(f"Found lost : {IndirectCost}")
                 break
 
-
+        time.sleep(1)
 
 
 #   hist_df['Open Time'] = pd.to_datetime(hist_df['Open Time'] / 1000, unit='s')
